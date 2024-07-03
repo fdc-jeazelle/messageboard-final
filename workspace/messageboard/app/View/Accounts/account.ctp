@@ -16,6 +16,22 @@
   .thistextarea {
     height: 100px;
   }
+
+  .error-messages {
+    background-color: #ddd;
+    padding: 10px;
+    margin: 0;
+    color: red;
+  }
+
+  .error-messages ul li {
+    text-decoration: none;
+    list-style-type: none;
+  }
+
+  .error-messages ul {
+    margin: 0;
+  }
 </style>
 <!-- nav bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -49,7 +65,20 @@
 
     </div>
   </div>
+  <?php if (!empty($validationErrors)) :
+  ?>
+    <div class="error-messages">
+      <ul>
+        <?php foreach ($validationErrors as $field => $errors) : ?>
+          <?php foreach ($errors as $error) : ?>
+            <li><?= $error  ?></li>
+          <?php endforeach; ?>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  <?php else : ?>
 
+  <?php endif; ?>
   <hr>
   <div class="row">
     <!-- left column -->
@@ -113,9 +142,9 @@
 
 
       <div class="form-group">
-        <label class="col-md-3 control-label">Hobby</label>
+        <!-- <label class="col-md-3 control-label">Hobby</label> -->
         <div class="col-md-8">
-          <?= $this->Form->control('hobby', ['type' => 'textarea', 'class' => 'form-control thistextarea', 'value' => !empty($accounts['Account']['hobby']) ? $accounts['Account']['hobby'] : '']); ?>
+          <?= $this->Form->input('hobby', ['type' => 'textarea', 'class' => 'form-control thistextarea', 'value' => !empty($accounts['Account']['hobby']) ? $accounts['Account']['hobby'] : '']); ?>
         </div>
       </div>
 

@@ -74,7 +74,21 @@
 </nav>
 
 <!-- nav bar -->
+<?php if (!empty($validationErrors)) :
+    var_dump($validationErrors);
+?>
+    <div class="error-messages">
+        <ul>
+            <?php foreach ($validationErrors as $field => $errors) : ?>
+                <?php foreach ($errors as $error) : ?>
+                    <li><?= $error  ?></li>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php else : ?>
 
+<?php endif; ?>
 <div class="container">
     <div class="row" style="display:flex;">
         <div class="col-md-6">

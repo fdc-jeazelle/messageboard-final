@@ -48,7 +48,7 @@ class UsersController extends AppController
                 // var_dump($this->User->id);
                 // exit;
                 $this->User->saveField('last_logged_in', date('Y-m-d H:i:s'), array('user_id', $this->User->id));
-                $this->redirect($this->Auth->redirectUrl());
+                $this->redirect(['controller' =>  'messages', 'action' => 'messagelist']);
             } else {
                 $this->Session->setFlash('Invalid Username or Password!');
                 // Debug SQL query

@@ -44,15 +44,15 @@ class Register extends AppModel
 		'first_name' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
-				//'message' => 'Your custom message here',
+				'message' => 'Please enter your firstname.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 			'minLength' => array(
-				'rule' => array('minLength', '5'),
-				'message' => 'First name must be at least 5 characters long.'
+				'rule' => array('minLength', '2'),
+				'message' => 'First name must be at least 2 characters long.'
 			),
 			'maxLength' => array(
 				'rule' => array('maxLength', '20'),
@@ -62,19 +62,19 @@ class Register extends AppModel
 		'last_name' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
-				'message' => 'Please enter a valid email address',
+				'message' => 'Please enter your last name.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 			'minLength' => array(
-				'rule' => array('minLength', '5'),
-				'message' => 'First name must be at least 5 character long.'
+				'rule' => array('minLength', '3'),
+				'message' => 'Last Name must be at least 5 character long.'
 			),
 			'maxLength' => array(
 				'rule' => array('maxLength', '20'),
-				'message' => 'First name cannot be more than 20 characters long.'
+				'message' => 'Last Name cannot be more than 20 characters long.'
 			),
 		),
 		'email' => array(

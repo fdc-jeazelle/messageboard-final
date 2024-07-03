@@ -22,8 +22,11 @@ class RegistersController extends AppController
                 // unset($this->request->data['Register']['password_confirm']);
 
                 if ($this->Register->save($this->request->data)) {
+                    //create userprofile entry 
 
                     $user = $this->User->findByUserId($this->Register->id);
+                    pr($this->Register->id);
+                    $this->userprofile($this->Register->id);
                     // exit;
                     if ($user) {
                         $this->Auth->login($user['User']);
@@ -40,7 +43,21 @@ class RegistersController extends AppController
             }
         }
     }
+    public function userprofile($data)
+    {
+        $this->loadModel('Account');
 
+        $toinsert = array(
+            'user_id' => $data,
+            'birthdate' => date("Y-m-d"),
+            'gender' => 0,
+            'hobby' => '...',
+            'img_path' => '/app/webroot/img/default_pic.jpg',
+            'profile_picture_name' => 'default_pic.jpg'
+        );
+
+        $this->Account->save($toinsert);
+    }
     public function thankyou()
     {
     }
