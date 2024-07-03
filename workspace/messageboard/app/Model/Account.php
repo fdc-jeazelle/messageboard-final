@@ -56,7 +56,7 @@ class Account extends AppModel
         'hobby' => array(
             'notBlank' => array(
                 'rule' => array('notBlank'),
-                'message' => 'Please select hobby.',
+                'message' => 'Please enter a hobby.',
                 //'allowEmpty' => false,
                 //'required' => false,
                 //'last' => false, // Stop validation after this rule

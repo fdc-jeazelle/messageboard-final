@@ -18,42 +18,42 @@ class AccountsController extends AppController
             'conditions' => ['Account.user_id' => $userId]
         ]);
 
+        //load existing details
+        $user = $this->User->findByUserId($userId);
+        $account = $this->Account->findByUserId($userId);
+
+        $this->set('users', $user);
+        $this->set('accounts', $account);
 
         if ($this->request->is(['post', 'put'])) {
-
             $profiledata = $this->request->data['Profile'];
-
-
-            if (!empty($profiledata['images']['tmp_name'])) {
-
-                //handle file upload 
+            if (!empty($profiledata['images']['tmp_name'] && $profiledata['images']['error'] == 0)) {
                 $file = $this->request->data['Profile']['images'];
-
                 $ext = pathinfo($file['name'], PATHINFO_EXTENSION); //get file extension
-
-
                 $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
                 $filename = $userId . '_' . 'img.' . $ext;
 
 
                 //check if ext is allowed 
-                if (in_array($ext, $allowed_ext)) {
+                if (!in_array($ext, $allowed_ext)) {
+                    $this->Session->setFlash(__($ext . ' file extension is not allowed.'));
+                    return $this->redirect(['action' => 'userprofile']);
+                }
 
-                    $uploadPath = WWW_ROOT . 'img/';
-                    $uploadFile = $uploadPath . $filename;
+                $uploadPath = WWW_ROOT . 'img/';
+                $uploadFile = $uploadPath . $filename;
 
-                    // Check if file already exists
-                    if (file_exists($uploadFile)) {
-                        // Attempt to delete the existing file
-                        unlink($uploadFile);
-                        // Handle unable to delete file error if needed
+                // Check if file already exists
+                if (file_exists($uploadFile)) {
+                    // Attempt to delete the existing file
+                    unlink($uploadFile);
+                    // Handle unable to delete file error if needed
 
-                    }
+                }
 
-                    if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
-                        // Set the file path to save in the database
-                        $this->request->data['Profile']['images'] = '/app/webroot/img/' . $filename;
-                    }
+                if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
+                    // Set the file path to save in the database
+                    $this->request->data['Profile']['images'] = '/app/webroot/img/' . $filename;
                 }
             } else {
                 unset($this->request->data['Profile']['images']);
@@ -67,32 +67,25 @@ class AccountsController extends AppController
                 'user_id' => $userId
             );
 
-            if (!empty($this->request->data['Profile']['images'])) {
+            if (!empty($profiledata['images']['tmp_name'] && $profiledata['images']['error'] == 0)) {
                 $userprofiledata['img_path'] = $this->request->data['Profile']['images'];
-            } else {
-                $userprofiledata['img_path'] = '';
             }
             if (!empty($filename)) {
                 $userprofiledata['profile_picture_name'] = $filename;
-            } else {
-                $userprofiledata['profile_picture_name'] = '';
             }
 
-
             if (empty($profile)) {
-                // var_dump($userprofiledata);
-                // exit;
                 $this->insertProfile($userprofiledata);
             } else {
                 $profiledataid = $profile[0]['Account']['id'];
 
-                // var_dump($profiledataid);
-                // exit;
-                $this->updateProfile($profiledataid, $userprofiledata);
+
+                if (!$this->updateProfile($profiledataid, $userprofiledata)) {
+                    $validationErrors = $this->Account->validationErrors;
+                    $this->set('validationErrors', $validationErrors);
+                    return $this->Session->setFlash(__('Unable to save your profile.'));
+                }
             }
-
-
-
             $userdata = $this->request->data['Profile'];
             $users_data = array(
                 'first_name' => !empty($users_data['first_name']) ? $users_data['first_name'] : '',
@@ -103,21 +96,12 @@ class AccountsController extends AppController
                 $this->Session->setFlash(__('Your profile has been saved.'));
                 $this->redirect(['action' => 'userprofile']);
             } else {
+                $validationErrors = $this->Register->validationErrors;
+
+                $this->set('validationErrors', $validationErrors);
+                // exit;
                 $this->Session->setFlash(__('Unable to save your profile.'));
             }
-
-            // if ($this->Account->save($this->request->data)) {
-            //     $this->Session->setFlash(__('Your profile has been saved.'));
-            //     return $this->redirect(['action' => 'account']);
-            // } else {
-
-            // }
-        } else {
-            $user = $this->User->findByUserId($userId);
-            $account = $this->Account->findByUserId($userId);
-
-            $this->set('users', $user);
-            $this->set('accounts', $account);
         }
     }
 
@@ -136,7 +120,8 @@ class AccountsController extends AppController
             $age = $this->getAge($account['Account']['birthdate']);
         }
 
-
+        // pr($account);
+        // exit;
         $account['Account']['Age'] = !empty($age) ? $age : '';
         $this->set('users', $user);
         $this->set('accounts', $account);
@@ -160,17 +145,22 @@ class AccountsController extends AppController
     }
     private function updateUsers($userId, $data)
     {
-        // Update the last_logged_in field
+
         $this->Register->id = $userId;
-        return $this->Register->save($data);
+        if ($this->Register->save($data)) {
+            return true;
+        }
     }
 
     private function updateProfile($userId, $data)
     {
 
-
+        $result = false;
         $this->Account->id = $userId;
-        return $this->Account->save($data);
+        if ($this->Account->save($data)) {
+            $result = true;
+        }
+        return $result;
     }
 
     private function insertProfile($data)

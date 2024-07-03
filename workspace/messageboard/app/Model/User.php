@@ -21,6 +21,18 @@ class User extends AppModel
 	 * @var string
 	 */
 	public $displayField = 'user_id';
+	// public $hasMany = array(
+	// 	'Message' => array(
+	// 		'className' => 'CreatorProfile',
+	// 		'foreignKey' => 'creator_id'
+	// 	)
+	// );
+	// public $hasOne = array(
+	// 	'UserProfile' => array(
+	// 		'className' => 'UserProfile',
+	// 		'foreignKey' => 'user_id'
+	// 	)
+	// );
 
 	/**
 	 * Validation rules

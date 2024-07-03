@@ -69,6 +69,7 @@ class MessagesController extends AppController
             'order' => ['Message.date_added' => 'DESC']
         ]);
 
+
         $msgprev = [];
         foreach ($messageList as $key => $msg) {
             $todisplay = $msg['MessageRecipient']['recipient_id'] == $userId ? $msg['Message']['creator_id'] : $msg['MessageRecipient']['recipient_id'];

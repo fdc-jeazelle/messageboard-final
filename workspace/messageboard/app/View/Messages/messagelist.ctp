@@ -75,10 +75,11 @@
                 $dataid = $message['MessageRecipient']['recipient_id'] == $user_id ? $message['Message']['creator_id'] : $message['MessageRecipient']['recipient_id'];
                 $displayname = $message['MessageRecipient']['recipient_id'] == $user_id ? $message[0]['creator_name'] : $message[0]['recipient_name'];
                 $filepath = !empty($message['CreatorProfile']['img_path']) ? $message['CreatorProfile']['img_path'] : '/app/webroot/img/default_pic.jpg';
+                $displayimg = !empty($previewmessage[$key]['imgpath']) ? $previewmessage[$key]['imgpath'] : '/app/webroot/img/default_pic.jpg';
             ?>
                 <?= $this->Html->link(
                     '<div class="media" data-id="' . $dataid . '">' .
-                        $this->Html->image($previewmessage[$key]['imgpath'], ['class' => 'avatar img-circle rounded-circle mr-3', 'alt' => 'avatar']) .
+                        $this->Html->image($displayimg, ['class' => 'avatar img-circle rounded-circle mr-3', 'alt' => 'avatar']) .
                         '<div class="media-body">' .
                         '<p>' .
                         '<strong>' . $displayname . '</strong>' .

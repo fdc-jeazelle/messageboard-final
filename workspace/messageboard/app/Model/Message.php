@@ -15,6 +15,12 @@ class Message extends AppModel
             'foreignKey' => 'message_id'
         )
     );
+    // public $hasOne = array(
+    //     'User' => array(
+    //         'className' => 'User',
+    //         'foreignKey' => 'user_id'
+    //     )
+    // );
 
     /**
      * Primary key field
